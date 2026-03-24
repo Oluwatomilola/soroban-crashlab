@@ -34,7 +34,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't handle if modal is open and it's not Escape
+      // Don&apos;t handle if modal is open and it&apos;s not Escape
       if (showDetailView && e.key !== 'Escape') return;
 
       switch (e.key) {
@@ -130,7 +130,6 @@ export default function Home() {
               key={index}
               role="listitem"
               tabIndex={0}
-              aria-selected={isSelected}
               onClick={() => handleCardClick(index)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
