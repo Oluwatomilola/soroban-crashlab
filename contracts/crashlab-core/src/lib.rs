@@ -4,6 +4,7 @@ pub mod reproducer;
 pub mod taxonomy;
 
 pub use auth_matrix::{AuthMode, MatrixReport, ModeResult, collect_mismatched, run_matrix};
+pub use prng::SeededPrng;
 pub use reproducer::{FlakyDetector, ReproReport, filter_ci_pack};
 pub use taxonomy::{FailureClass, classify_failure, group_by_class};
 
