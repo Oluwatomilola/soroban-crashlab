@@ -112,10 +112,13 @@ pub use seed_novelty::{
 pub mod stale_detector;
 pub use stale_detector::{StaleDetectorConfig, StaleRunDetector, StaleStatus};
 
+pub mod worker_partition;
+pub use worker_partition::{WorkerPartition, WorkerPartitionError, worker_for_seed};
+
 pub mod run_control;
 pub use run_control::{
     CancelSignal, RunId, RunSummary, RunTerminalState, cancel_marker_path, cancel_requested,
-    clear_cancel_request, default_state_dir, drive_run, request_cancel_run,
+    clear_cancel_request, default_state_dir, drive_run, drive_run_partitioned, request_cancel_run,
 };
 
 pub mod rpc_envelope;
