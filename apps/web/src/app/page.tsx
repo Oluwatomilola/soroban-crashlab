@@ -29,6 +29,7 @@ import ColumnCustomization, { ColumnId } from './add-column-customization';
 import IssueTriageBoard from './add-issue-triage-board-ui';
 import CampaignMilestoneTimeline from './campaign-milestone-timeline-55';
 import VirtualizedRunTable from './implement-virtualized-run-table-component';
+import AutomatedRegressionDeployIntegration from './integrate-automated-regression-deploy-integration';
 
 // Mock data for demonstration
 const MOCK_RUNS: FuzzingRun[] = Array.from({ length: 25 }, (_, i) => ({
@@ -668,6 +669,10 @@ function HomeContent() {
 
       <div className="mb-12 w-full">
         <CreateReportingTemplatesPage60 />
+      </div>
+
+      <div className="mb-12 w-full">
+        <AutomatedRegressionDeployIntegration />
       </div>
 
       {isMaintainer && (
