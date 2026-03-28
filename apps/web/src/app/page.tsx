@@ -11,6 +11,7 @@ import { FuzzingRun, RunStatus } from './types';
 import ReportModal from './ReportModal';
 import { generateMarkdownReport } from './report-utils';
 import CreateRunHeatmapPage55 from './create-run-heatmap-page-55';
+import AddRunComparisonCharts from './add-run-comparison-charts';
 import AlertingSettingsPage54 from './implement-alerting-settings-page-54';
 import CrossRunBoardWidgets from './implement-cross-run-board-widgets-component';
 import CrossRunBoardCustomWidgets from './create-cross-run-board-custom-widgets-63';
@@ -532,6 +533,10 @@ function HomeContent() {
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
+      </div>
+
+      <div className="mb-12 w-full">
+        <AddRunComparisonCharts runs={filteredRuns} />
       </div>
 
       <div className="mb-12 w-full">
