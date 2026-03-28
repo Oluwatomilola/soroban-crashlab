@@ -187,8 +187,9 @@ export default function VirtualizedRunTable({
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = 0;
-            setScrollTop(0);
         }
+        const timer = setTimeout(() => setScrollTop(0), 0);
+        return () => clearTimeout(timer);
     }, [runs]);
 
     if (runs.length === 0) {

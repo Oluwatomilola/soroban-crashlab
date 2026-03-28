@@ -89,17 +89,18 @@ export default function CampaignMilestoneTimeline({
     const startEvent: MilestoneEvent = {
       id: `event-${campaignId}-start`,
       type: 'campaign_start',
-      timestamp: new Date().toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit', 
+      timestamp: new Date().toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
         second: '2-digit',
-        hour12: true 
+        hour12: true
       }),
       label: 'Campaign Started',
       description: `Fuzzing campaign ${campaignId} initiated`,
       severity: 'low',
     };
-    setEvents([startEvent]);
+    const timer = setTimeout(() => setEvents([startEvent]), 0);
+    return () => clearTimeout(timer);
   }, [campaignId]);
 
   // Simulate incremental event updates
