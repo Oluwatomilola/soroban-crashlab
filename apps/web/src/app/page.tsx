@@ -37,6 +37,7 @@ import AddRunStatusTimeline from './add-run-status-timeline';
 import AddExportRunJson from './add-export-run-json';
 import AddExportRunCsv from './add-export-run-csv';
 import IntegrateWebhookManagerForRunEvents from './integrate-webhook-manager-for-run-events';
+import ArtifactExplorer from './add-artifact-explorer';
 
 // Mock data for demonstration
 const MOCK_RUNS: FuzzingRun[] = Array.from({ length: 25 }, (_, i) => ({
@@ -625,6 +626,10 @@ function HomeContent() {
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
+
+        <div className="mt-12 w-full">
+          <ArtifactExplorer />
+        </div>
 
         {/* Virtualized run table — renders all filtered runs without pagination */}
         {dataState === 'success' && filteredRuns.length > 0 && (
