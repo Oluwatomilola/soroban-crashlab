@@ -1,123 +1,71 @@
-# feat: implement 4 frontend dashboard components
+# feat: Add Replay from UI action
+
+Closes #500
 
 ## Summary
 
-This PR implements 4 new frontend dashboard components to improve the user experience and functionality of the Soroban CrashLab dashboard.
+Implements the Replay-from-UI action flow for dashboard run rows with explicit loading/success/error states, accessible status messaging, and shared cross-module replay mapping so replay callbacks are consistent when inserted into dashboard state.
 
-## Tasks Completed
+## What changed
 
-### ✅ Task 1: Create Advanced dashboard filters page
-- **File**: `apps/web/src/app/create-advanced-dashboard-filters-page.tsx`
-- **Features**:
-  - Comprehensive filtering options for runs (status, area, severity, date range, duration, resource fees)
-  - Search functionality for run IDs, signatures, and keywords
-  - Collapsible advanced filters with simple/advanced view toggle
-  - Real-time active filter count display
-  - Reset all filters functionality
+### `apps/web/src/app/add-replay-from-ui-action.tsx`
 
-### ✅ Task 2: Add Bulk actions for runs
-- **File**: `apps/web/src/app/add-bulk-actions-for-runs.tsx`
-- **Features**:
-  - Support for bulk operations: cancel, retry, delete, export, tag, assign
-  - Dynamic action availability based on run statuses
-  - Modal dialogs for complex actions (export format selection, tagging, assignment)
-  - Selection management with clear functionality
-  - Action descriptions and tooltips for better UX
+- Upgraded replay button from boolean loading state to explicit status machine: `idle | loading | success | error`
+- Added explicit user-visible result states:
+  - `loading`: spinner + `aria-busy`
+  - `success`: “Replay queued” label + queued run id feedback
+  - `error`: retry-focused error copy and action label
+- Added `aria-live="polite"` status region for screen-reader announcement of replay transitions
+- Preserved keyboard accessibility via semantic button interaction and focus-visible styles
 
-### ✅ Task 3: Implement Resource fee insight panel component
-- **File**: `apps/web/src/app/implement-resource-fee-insight-panel-component.tsx`
-- **Features**:
-  - Comprehensive resource fee statistics (average, median, min/max, total)
-  - Fee distribution visualization with color-coded categories
-  - Time-based filtering (7d, 30d, 90d, all time)
-  - Multiple view modes: overview, trends, breakdown
-  - Daily and weekly trend charts
-  - Area and severity breakdown analysis
-  - Responsive design with proper data formatting
+### `apps/web/src/app/replay-ui-utils.ts` (new)
 
-### ✅ Task 4: Create Run issue link page
-- **File**: `apps/web/src/app/create-run-issue-link-page-page.tsx`
-- **Features**:
-  - Run selection with detailed information display
-  - Issue linking with support for GitHub, GitLab, Jira, Linear, and custom URLs
-  - URL validation and automatic issue type detection
-  - Issue management (add, remove, save)
-  - Recent issues overview
-  - Tips and quick actions panel
-  - Two-column layout for optimal space usage
+- Added shared replay UI/domain helpers:
+  - `getReplayButtonLabel(status)`
+  - `createReplayPlaceholderRun(data)`
+  - exported `ReplayActionData` and `ReplayButtonStatus` types
+- This prevents duplicate replay-placeholder run mapping logic and improves consistency between modules
 
-## Technical Details
+### `apps/web/src/app/replay-ui-utils.test.ts` (new)
 
-### Component Architecture
-- All components follow React functional component patterns
-- TypeScript interfaces for type safety
-- Custom hooks for state management and calculations
-- Responsive design using Tailwind CSS
+- Added unit coverage for replay button label mapping and placeholder run creation
+- Added integration/regression path that validates `simulateSeedReplay(...)` output can be mapped into a dashboard-compatible `FuzzingRun`
 
-### Key Features
-- **Type Safety**: Full TypeScript implementation with proper interfaces
-- **Accessibility**: Semantic HTML and ARIA attributes where applicable
-- **Performance**: Optimized re-renders using useCallback and useMemo
-- **User Experience**: Loading states, error handling, and intuitive interactions
-- **Data Visualization**: Charts and progress indicators for insights
+## Design note
 
-### Integration Points
-- Components are designed to integrate with existing `FuzzingRun` type structure
-- Consistent styling with the existing design system
-- Props interfaces allow for easy integration with parent components
+**Tradeoff**: Replay success UI auto-resets after ~2.5s instead of persisting indefinitely. This keeps row actions compact and avoids stale “success” labels while still confirming the queue event.
 
-## Files Changed
+**Alternative considered**: Adding a global toast system for replay feedback. Rejected for this issue scope to avoid introducing cross-cutting notification state and dependencies.
 
-### New Files Created
-- `apps/web/src/app/create-advanced-dashboard-filters-page.tsx` (295 lines)
-- `apps/web/src/app/add-bulk-actions-for-runs.tsx` (246 lines)
-- `apps/web/src/app/implement-resource-fee-insight-panel-component.tsx` (317 lines)
-- `apps/web/src/app/create-run-issue-link-page-page.tsx` (317 lines)
+**Rollback path**: Revert this commit to restore prior replay button behavior and inline replay placeholder construction in `page.tsx`.
 
-### Total Impact
-- **4 new component files**
-- **1,267 lines of code added**
-- **0 existing files modified**
+## Validation
 
-## Testing
+```bash
+cd apps/web && npx jest src/app/replay-ui-utils.test.ts --no-cache
+```
 
-Components include:
-- Input validation and error handling
-- Edge case handling (empty states, no data scenarios)
-- Responsive design considerations
-- Accessibility features
+- ✅ 9/9 tests passing
 
-## Screenshots/Demos
+```bash
+cd apps/web && npx eslint src/app/add-replay-from-ui-action.tsx src/app/replay-ui-utils.ts src/app/replay-ui-utils.test.ts
+```
 
-*(Note: Actual screenshots would be added here after testing)*
+- ✅ No lint errors in impacted files
 
-## Acceptance Criteria Met
+```bash
+cd apps/web && npm run lint && npm run build
+```
 
-✅ **Advanced dashboard filters is visible and functional in the dashboard**
-✅ **Bulk actions for runs is visible and functional in the dashboard**  
-✅ **Resource fee insight panel is visible and functional in the dashboard**
-✅ **Run issue link page is visible and functional in the dashboard**
-
-## Next Steps
-
-- Integration of these components into the main dashboard layout
-- Testing with real data and API endpoints
-- Performance optimization if needed
-- User feedback collection and iterations
+- ⚠ `npm run lint` currently fails due to pre-existing unrelated `page.tsx` lint issues already present in branch baseline
+- ⚠ `npm run build` fails on pre-existing unrelated TypeScript error in `add-accessible-keyboard-nav-blueprint-page-49.tsx:253` (`handleReset` not defined)
 
 ## Checklist
 
-- [x] Code follows project style guidelines
-- [x] Components are properly typed with TypeScript
-- [x] Responsive design implemented
-- [x] Accessibility considerations included
-- [x] Error handling implemented
-- [x] Documentation provided
-- [x] All acceptance criteria met
-
----
-
-**Priority**: Medium  
-**Area**: area:web  
-**Components**: 4 new dashboard components  
-**Lines of Code**: 1,267
+- [x] Replay action is visible and functional in dashboard row actions
+- [x] Explicit loading/success/error states implemented
+- [x] Keyboard accessibility preserved
+- [x] Responsive behavior preserved for row action container
+- [x] Unit tests added for replay helper logic
+- [x] Integration/regression path added for replay service → dashboard run mapping
+- [x] Existing behavior outside issue scope preserved
