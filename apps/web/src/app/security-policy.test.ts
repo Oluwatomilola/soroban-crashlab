@@ -10,11 +10,29 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 describe('Security Policy and Disclosure Path', () => {
-  const repoRoot = path.resolve(__dirname, '../../../../..');
+  const findRepoRoot = (start: string): string => {
+    let current = start;
+
+    while (current !== path.dirname(current)) {
+      if (
+        fs.existsSync(path.join(current, 'README.md')) &&
+        fs.existsSync(path.join(current, '.github', 'SECURITY.md'))
+      ) {
+        return current;
+      }
+
+      current = path.dirname(current);
+    }
+
+    throw new Error('Unable to locate repository root');
+  };
+
+  const repoRoot = findRepoRoot(process.cwd());
   const securityPolicyPath = path.join(repoRoot, '.github', 'SECURITY.md');
   const readmePath = path.join(repoRoot, 'README.md');
   const contributingPath = path.join(repoRoot, 'CONTRIBUTING.md');
   const maintainerPlaybookPath = path.join(repoRoot, 'MAINTAINER_WAVE_PLAYBOOK.md');
+  const prDescriptionPath = path.join(repoRoot, 'PR_DESCRIPTION.md');
 
   describe('SECURITY.md file existence and structure', () => {
     it('should have a SECURITY.md file in .github directory', () => {
@@ -74,6 +92,17 @@ describe('Security Policy and Disclosure Path', () => {
       expect(content).toMatch(/known gaps|accepted risks/i);
       expect(content).toContain('MAINTAINER_WAVE_PLAYBOOK.md');
     });
+
+    it('should define dependency update review and rollback handling', () => {
+      const content = fs.readFileSync(securityPolicyPath, 'utf-8');
+
+      expect(content).toContain('## Dependency Update Review and Rollback');
+      expect(content).toMatch(/changelog|release notes/i);
+      expect(content).toMatch(/rollback/i);
+      expect(content).toContain('24 hours');
+      expect(content).toContain('36 hours');
+      expect(content).toContain('48 hours');
+    });
   });
 
   describe('README.md integration', () => {
@@ -89,6 +118,13 @@ describe('Security Policy and Disclosure Path', () => {
       const content = fs.readFileSync(readmePath, 'utf-8');
       
       expect(content.toLowerCase()).toMatch(/do not open.*public issue.*security/i);
+    });
+
+    it('should mention dependency update requirements in README security guidance', () => {
+      const content = fs.readFileSync(readmePath, 'utf-8');
+
+      expect(content.toLowerCase()).toContain('dependency update');
+      expect(content.toLowerCase()).toContain('rollback');
     });
   });
 
@@ -111,6 +147,15 @@ describe('Security Policy and Disclosure Path', () => {
       
       expect(content).toContain('Security review checklist');
       expect(content).toMatch(/\[\s*\]/); // Checkbox format
+    });
+
+    it('should include dependency update guidance', () => {
+      const content = fs.readFileSync(contributingPath, 'utf-8');
+
+      expect(content).toContain('## Dependency update guidance');
+      expect(content).toMatch(/changelog|release notes/i);
+      expect(content).toMatch(/rollback/i);
+      expect(content).toMatch(/validation checklist/i);
     });
   });
 
@@ -141,6 +186,15 @@ describe('Security Policy and Disclosure Path', () => {
       expect(content).toMatch(/reviewing.*security|security.*review/i);
       expect(content).toContain('fuzz input handling');
       expect(content).toContain('artifact storage');
+    });
+
+    it('should document dependency update review and rollback policy', () => {
+      const content = fs.readFileSync(maintainerPlaybookPath, 'utf-8');
+
+      expect(content).toContain('## Dependency update review and rollback policy');
+      expect(content).toContain('.github/SECURITY.md#dependency-update-review-and-rollback');
+      expect(content).toContain('CHANGELOG.md');
+      expect(content).toContain('npm run test:policy');
     });
   });
 
@@ -181,11 +235,15 @@ describe('Security Policy and Disclosure Path', () => {
   });
 
   describe('Validation commands', () => {
-    it('should document validation commands in README', () => {
-      const content = fs.readFileSync(readmePath, 'utf-8');
+    it('should document validation commands in PR description', () => {
+      const content = fs.readFileSync(prDescriptionPath, 'utf-8');
       
-      // Should reference the grep command for TODO/TBD checking
-      expect(content).toMatch(/grep.*TODO.*TBD|rg.*TODO.*TBD/i);
+      expect(content).toMatch(/rg.*TODO.*TBD/i);
+      expect(content).toContain('npm run test:policy');
+      expect(content).toContain('npm run test');
+      expect(content).toContain('npm run lint');
+      expect(content).toContain('npm run build');
+      expect(content).toContain('Closes #');
     });
   });
 
