@@ -61,6 +61,8 @@ import AddRunAnnotations from "./add-run-annotations";
 import NotificationCenter from "./add-notification-center-ui";
 import BulkActionsForRuns, { BulkAction } from "./add-bulk-actions-for-runs";
 import AddDownloadableRunArtifactBundle from "./add-downloadable-run-artifact-bundle";
+import CampaignConfigForm from "./CampaignConfigForm";
+import { CampaignConfig } from "./types";
 
 // Mock data for demonstration
 const MOCK_RUNS: FuzzingRun[] = Array.from({ length: 25 }, (_, i) => ({
@@ -161,6 +163,7 @@ function HomeContent() {
     "report",
   ]);
   const [selectedRunIds, setSelectedRunIds] = useState<Set<string>>(new Set());
+  const [showCampaignConfig, setShowCampaignConfig] = useState(false);
 
   const handleToggleRunSelection = useCallback((runId: string) => {
     setSelectedRunIds(prev => {
@@ -398,6 +401,25 @@ function HomeContent() {
     },
     [setQueryState],
   );
+
+  const handleLaunchCampaign = useCallback((config: CampaignConfig) => {
+    console.log("Launching campaign with config:", config);
+    setShowCampaignConfig(false);
+    // Simulate campaign launch by adding a new running run
+    const newRun: FuzzingRun = {
+      id: `run-${Date.now().toString().slice(-4)}`,
+      status: "running",
+      area: "state",
+      severity: "medium",
+      duration: 0,
+      seedCount: 0,
+      crashDetail: null,
+      cpuInstructions: 0,
+      memoryBytes: 0,
+      minResourceFee: 0,
+    };
+    setRuns((prev) => [newRun, ...prev]);
+  }, []);
 
   const handleCopyPermalink = useCallback(async () => {
     try {
@@ -666,6 +688,29 @@ function HomeContent() {
             onRetry={() => setFetchAttempt((n) => n + 1)}
             errorMessage="Run cluster diagnostics are temporarily unavailable."
           />
+
+          <div className="w-full mb-12">
+            {showCampaignConfig ? (
+              <CampaignConfigForm
+                onSubmit={handleLaunchCampaign}
+                onCancel={() => setShowCampaignConfig(false)}
+              />
+            ) : (
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setShowCampaignConfig(true)}
+                  className="group relative flex items-center gap-3 px-8 py-4 rounded-2xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-bold hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all shadow-xl active:scale-95"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Configure & Launch New Campaign
+                  <div className="absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+              </div>
+            )}
+          </div>
 
           <div id="recent-runs" className="w-full mb-8 scroll-mt-8">
             <div className="flex items-center justify-between mb-6">
