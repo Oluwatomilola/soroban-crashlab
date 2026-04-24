@@ -252,15 +252,13 @@ Also paste the exact failing command and the first relevant error block.
    release maintainer can update [`CHANGELOG.md`](CHANGELOG.md) and run the
    compatibility review in [`docs/RELEASE_PROCESS.md`](docs/RELEASE_PROCESS.md).
 
-## Dependency update guidance
+## Conflict of interest disclosures
 
-When updating dependencies or lockfiles:
+If you know that an issue assignment, PR review, merge, security triage, or resolution-credit decision involves a maintainer with a personal, employment, sponsor, financial, close-collaboration, direct-competition, or prior private implementation conflict, flag it early.
 
-- Keep the PR scoped to one dependency family, one advisory, or one clearly related package set.
-- Review the upstream changelog, release notes, and any relevant advisory for every version hop. Summarize the findings in the PR, including breaking changes and removed behavior.
-- Include a rollback plan in the PR description before requesting review. Note the previous known-good version, the rollback trigger, and the revert path.
-- Run the post-update validation checklist for the affected surfaces only and include a short command output summary so maintainers can verify the change without guesswork.
-- If the change affects public APIs, release behavior, or maintainer workflow, call that out so the release maintainer can update [`CHANGELOG.md`](CHANGELOG.md) and follow [`docs/RELEASE_PROCESS.md`](docs/RELEASE_PROCESS.md).
+- For normal issues and PRs, leave a concise public comment asking for an unconflicted maintainer.
+- For private vulnerability reports, keep details in GitHub private vulnerability reporting or maintainer email. Do not move sensitive security details into a public issue or PR.
+- A conflicted maintainer may provide factual context when asked, but an unconflicted maintainer must own assignment, review approval, merge, severity, disclosure timing, and credit decisions.
 
 ## Quality bar
 

@@ -38,28 +38,29 @@ A useful report includes:
 
 We follow a **coordinated disclosure** model. We ask reporters to keep details private until a fix is available or the 90-day window closes, whichever comes first. We will credit reporters in the advisory unless they prefer to remain anonymous.
 
-## Dependency Update Review and Rollback
+## Maintainer Conflicts of Interest
 
-Upstream dependency vulnerabilities should still be reported upstream, but dependency version changes and lockfile updates proposed in this repository are security-sensitive changes and must follow a documented review and rollback path.
+Security trust depends on assignment, triage, review, merge, severity, and disclosure decisions being made by maintainers who can act independently.
+
+A maintainer has a conflict of interest when they are the reporter, author, assignee, PR author, employer, client, sponsor, close collaborator, direct financial beneficiary, direct competitor, or prior private implementer for the issue or PR under decision.
 
 ### Required control path
 
-1. Keep each dependency update PR scoped to the dependency family, advisory, or package set being changed. Avoid unrelated refactors in the same PR.
-2. Review the upstream changelog, release notes, and any relevant advisory for every version hop. Summarize breaking changes, removed APIs, and security-relevant notes in the PR description.
-3. Document a rollback plan before merge. Include the previous known-good version, the expected rollback trigger, and the revert path (for example: revert commit, restore manifest + lockfile, or re-pin the prior version).
-4. Run the post-update validation checklist for the affected surfaces only and include a command output summary in the PR. For web dependency updates, use `cd apps/web && npm run test:policy && npm run test && npm run lint && npm run build`. For core dependency updates, use `cd contracts/crashlab-core && cargo test --all-targets`.
-5. If changelog or release-note review is incomplete, validation fails, or the rollback path is ambiguous, do not merge. Escalate to another maintainer within the standard review window.
+1. The conflicted maintainer discloses the conflict before taking an assignment, review, merge, severity, fix-readiness, bounty, point-award, or disclosure decision.
+2. For public issues or PRs, disclose with a short public comment and avoid sensitive details. For private vulnerability reports, disclose only in the GitHub private vulnerability report or maintainer channel.
+3. An unconflicted maintainer takes ownership before the decision continues.
+4. The conflicted maintainer may provide factual context when requested, but must not approve, merge, assign, close, set severity, decide disclosure timing, or award resolution credit for the conflicted item.
 
 ### Timelines
 
-- Standard dependency update PRs use the Wave review timers: first maintainer review within **24 hours**, escalation to any available maintainer at **36 hours**.
-- Dependency updates responding to a private vulnerability report keep the disclosure timers in this policy: acknowledgement within **48 hours**, initial triage and severity assessment within **5 business days**, and fix or mitigation plan within **14 days**.
+- Issue assignment and PR review conflicts use the Wave maintainer timelines: replacement owner within **24 hours**, escalation to any available unconflicted maintainer at **36 hours**.
+- Security report conflicts keep the disclosure timelines in this policy: acknowledgement within **48 hours**, initial triage and severity assessment within **5 business days**, and fix or mitigation plan within **14 days**.
 
 ### Known risks and mitigation boundaries
 
-- Upstream changelogs and release notes can omit transitive or packaging-level changes. Mitigation: reviewers must inspect manifest and lockfile diffs together and hold merge when the dependency set is unclear.
-- Lockfile-only updates can hide meaningful transitive version shifts. Mitigation: identify the changed transitive packages and review their upstream release notes before approval.
-- A repository rollback restores our manifest and lockfile state, but it does not undo already-published upstream compromises or previously downloaded artifacts. Mitigation: pair rollback with upstream advisory tracking and any required downstream disclosure.
+- A small maintainer pool can delay replacement ownership. Mitigation: the Wave lead or any available unconflicted maintainer may take over at the escalation timer.
+- Private vulnerability reports can reveal sensitive details while a conflict is being handled. Mitigation: recusal records for private reports stay in private channels until coordinated disclosure.
+- This policy does not automatically detect personal, employment, financial, or sponsor relationships. Mitigation: maintainers must self-disclose, contributors should flag known conflicts, and reviewers can request reassignment when independence is unclear.
 
 ## Scope
 

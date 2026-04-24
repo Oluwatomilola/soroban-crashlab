@@ -1,18 +1,17 @@
-Closes #438
+# feat: Add conflict-of-interest maintainer policy
 
+Closes #437 
 ## Summary
 
-Defines the dependency update security control path for changelog review, rollback planning, and post-update validation. The policy is documented in the security policy, contributor guide, and maintainer playbook, with a focused policy test that verifies the documented review and rollback requirements without manual guesswork.
+Defines the conflict-of-interest control path for issue assignment, PR review, merge, security triage, disclosure, and resolution-credit decisions. The policy is documented in the security policy and maintainer playbook, with contributor guidance for raising known conflicts without leaking private vulnerability details.
 
 ## What changed
 
-- Added dependency update review and rollback policy to `.github/SECURITY.md`, including required control path, timelines, known risks, and mitigation boundaries.
-- Added contributor guidance for dependency update scope, changelog review, rollback planning, and validation evidence in `CONTRIBUTING.md`.
-- Added maintainer review and rollback requirements to `MAINTAINER_WAVE_PLAYBOOK.md`, including the dependency-policy verification command.
-- Added `dependency-update-policy.ts` with a pure evaluator for review readiness, rollback requirements, validation commands, and security-response timelines.
-- Added `dependency-update-policy.test.ts` to cover the primary ready-for-review flow plus a lockfile-only edge case.
-- Updated the existing security policy documentation test coverage to check dependency update policy links and validation guidance.
-- Wired the focused policy test into `npm run test` and CI.
+- Added conflict-of-interest handling to `.github/SECURITY.md`, including required recusal path, timelines, risks, and mitigation boundaries.
+- Linked the policy from `MAINTAINER_WAVE_PLAYBOOK.md` and documented the maintainer verification command.
+- Added contributor disclosure guidance to `CONTRIBUTING.md`.
+- Added `maintainer-conflict-policy.ts` with a pure policy evaluator for allowed decisions, recusal-required decisions, SLA timelines, and handle-normalization edge cases.
+- Added focused policy tests and wired them into `npm run test` plus CI.
 
 ## Validation
 
@@ -28,7 +27,7 @@ npm run test:policy
 npm run test
 ```
 
-Expected: policy checks pass, including the primary changelog-reviewed path, lockfile-only edge behavior, and documentation cross-links.
+Expected: policy checks pass, including primary allowed flow, conflict recusal flow, security-triage edge behavior, and documentation cross-links.
 
 ```bash
 cd apps/web
@@ -41,17 +40,10 @@ Expected: frontend lint/build remain green for impacted surfaces.
 ## Local Output Summary
 
 - `rg -n "TODO|TBD" README.md CONTRIBUTING.md MAINTAINER_WAVE_PLAYBOOK.md .github/SECURITY.md || true`: no output.
-- `git diff --check`: passed.
 - `jq empty apps/web/package.json`: passed.
 - `ruby -e 'require "yaml"; YAML.load_file(".github/workflows/ci.yml"); puts "ci yaml ok"'`: `ci yaml ok`.
-- `cd apps/web && nvm use 22 && npm ci`: passed on Node `v22.22.2` / npm `10.9.7` (install completed; npm reported `1 high severity vulnerability` in the dependency tree).
-- `cd apps/web && nvm use 22 && npm run test:policy`: passed (`dependency-update-policy.test.ts: all assertions passed`).
-- `cd apps/web && nvm use 22 && npm run test`: passed (all 7 lightweight test files, including `dependency-update-policy.test.ts`).
-- `cd apps/web && nvm use 22 && npm run lint`: failed on pre-existing baseline issues in unrelated files (for example `add-a-fuzzy-query-builder-page-51.tsx`, `campaign-milestone-timeline-55.tsx`, `implement-run-detail-modal-component.tsx`, and `integrate-sentry-integration-for-crash-reporting.tsx`).
-- `cd apps/web && nvm use 22 && npm run build`: started, warned about multiple lockfiles and inferred root selection, then stalled in Next.js compile stage with no stage progress for several minutes. The build was stopped after it stopped advancing.
+- `npm run test:policy`, `npm run test`, `npm run lint`, and `npm run build`: not executed in this local shell because `node` and `npm` are unavailable (`which node` and `which npm` returned not found). CI now runs `npm run test` between lint and build.
 
 ## Notes for Maintainers
 
-- Review the PR description for the upstream changelog or release-notes summary before approving.
-- Do not merge without a rollback path that names the previous known-good version and revert method.
-- Lockfile-only updates still require transitive package review before approval.
+The automated policy check validates documented timers and handle-based self-assignment/self-review conflicts. It does not detect private employment, sponsor, financial, or close-collaboration relationships; those still require self-disclosure and reviewer escalation per the policy.

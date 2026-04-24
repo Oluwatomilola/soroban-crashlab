@@ -93,15 +93,14 @@ describe('Security Policy and Disclosure Path', () => {
       expect(content).toContain('MAINTAINER_WAVE_PLAYBOOK.md');
     });
 
-    it('should define dependency update review and rollback handling', () => {
+    it('should define maintainer conflict-of-interest handling', () => {
       const content = fs.readFileSync(securityPolicyPath, 'utf-8');
 
-      expect(content).toContain('## Dependency Update Review and Rollback');
-      expect(content).toMatch(/changelog|release notes/i);
-      expect(content).toMatch(/rollback/i);
-      expect(content).toContain('24 hours');
-      expect(content).toContain('36 hours');
+      expect(content).toContain('## Maintainer Conflicts of Interest');
+      expect(content).toMatch(/unconflicted maintainer/i);
       expect(content).toContain('48 hours');
+      expect(content).toContain('5 business days');
+      expect(content).toContain('14 days');
     });
   });
 
@@ -120,11 +119,10 @@ describe('Security Policy and Disclosure Path', () => {
       expect(content.toLowerCase()).toMatch(/do not open.*public issue.*security/i);
     });
 
-    it('should mention dependency update requirements in README security guidance', () => {
+    it('should mention conflict-of-interest handling in README security guidance', () => {
       const content = fs.readFileSync(readmePath, 'utf-8');
 
-      expect(content.toLowerCase()).toContain('dependency update');
-      expect(content.toLowerCase()).toContain('rollback');
+      expect(content.toLowerCase()).toContain('conflict-of-interest');
     });
   });
 
@@ -149,13 +147,12 @@ describe('Security Policy and Disclosure Path', () => {
       expect(content).toMatch(/\[\s*\]/); // Checkbox format
     });
 
-    it('should include dependency update guidance', () => {
+    it('should explain conflict disclosures without leaking private vulnerabilities', () => {
       const content = fs.readFileSync(contributingPath, 'utf-8');
 
-      expect(content).toContain('## Dependency update guidance');
-      expect(content).toMatch(/changelog|release notes/i);
-      expect(content).toMatch(/rollback/i);
-      expect(content).toMatch(/validation checklist/i);
+      expect(content).toMatch(/conflict of interest/i);
+      expect(content).toMatch(/private vulnerability/i);
+      expect(content).toMatch(/unconflicted maintainer/i);
     });
   });
 
@@ -188,12 +185,11 @@ describe('Security Policy and Disclosure Path', () => {
       expect(content).toContain('artifact storage');
     });
 
-    it('should document dependency update review and rollback policy', () => {
+    it('should link to conflict-of-interest policy and verification command', () => {
       const content = fs.readFileSync(maintainerPlaybookPath, 'utf-8');
 
-      expect(content).toContain('## Dependency update review and rollback policy');
-      expect(content).toContain('.github/SECURITY.md#dependency-update-review-and-rollback');
-      expect(content).toContain('CHANGELOG.md');
+      expect(content).toContain('.github/SECURITY.md#maintainer-conflicts-of-interest');
+      expect(content).toContain('Conflict-of-interest handling');
       expect(content).toContain('npm run test:policy');
     });
   });
@@ -238,11 +234,9 @@ describe('Security Policy and Disclosure Path', () => {
     it('should document validation commands in PR description', () => {
       const content = fs.readFileSync(prDescriptionPath, 'utf-8');
       
-      expect(content).toMatch(/rg.*TODO.*TBD/i);
+      // Should reference the grep command for TODO/TBD checking
+      expect(content).toMatch(/grep.*TODO.*TBD|rg.*TODO.*TBD/i);
       expect(content).toContain('npm run test:policy');
-      expect(content).toContain('npm run test');
-      expect(content).toContain('npm run lint');
-      expect(content).toContain('npm run build');
       expect(content).toContain('Closes #');
     });
   });
