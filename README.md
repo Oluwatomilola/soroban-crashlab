@@ -60,6 +60,7 @@ gh --version # optional
 ```bash
 cd apps/web
 npm ci
+npm run test
 npm run lint
 npm run build
 npm run dev

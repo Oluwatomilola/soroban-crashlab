@@ -185,7 +185,7 @@ When reviewing changes to artifact storage:
 ### CI security checks
 - **Existing checks**:
   - Rust: `cargo test --all-targets` (compilation and unit tests)
-  - Web: `npm run lint` and `npm run build`
+  - Web: `npm run test`, `npm run lint`, and `npm run build`
 - **Missing checks** (gaps):
   - Dependency vulnerability scanning for Rust (`cargo audit`) and npm (`npm audit`).
   - Security-focused linter rules (e.g., `cargo clippy` with `--deny=unsafe_code` or similar).
