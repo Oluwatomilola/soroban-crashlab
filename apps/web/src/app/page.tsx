@@ -716,6 +716,12 @@ function HomeContent() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">Recent Fuzzing Runs</h2>
               <div className="flex items-center gap-3">
+                <Link
+                  href="/trends"
+                  className="px-3 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-900/50 transition border border-blue-200 dark:border-blue-800"
+                >
+                  View Trends
+                </Link>
                 <ColumnCustomization
                   visibleColumns={visibleColumns}
                   onChange={setVisibleColumns}
