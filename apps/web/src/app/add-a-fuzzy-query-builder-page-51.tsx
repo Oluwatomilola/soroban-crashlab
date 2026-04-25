@@ -76,7 +76,7 @@ function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
 }
 
 function applyFilter(run: FuzzingRun, filter: QueryFilter): boolean {
-  const value = getNestedValue(run, filter.field);
+  const value = getNestedValue(run as unknown as Record<string, unknown>, filter.field);
 
   switch (filter.operator) {
     case 'equals':
