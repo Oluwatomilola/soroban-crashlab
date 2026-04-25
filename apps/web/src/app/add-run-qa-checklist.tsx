@@ -83,6 +83,7 @@ export default function AddRunQAChecklist({ runs = [] }: AddRunQAChecklistProps)
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved) as Record<string, boolean>;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCheckedItems(parsed);
       }
     } catch {

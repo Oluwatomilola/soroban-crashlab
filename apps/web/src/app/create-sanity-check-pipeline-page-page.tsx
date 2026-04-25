@@ -147,18 +147,13 @@ export default function SanityCheckPipelinePage({ className = '' }: SanityCheckP
       try {
         await new Promise(resolve => setTimeout(resolve, 800));
         if (isMounted) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setChecks(MOCK_SANITY_CHECKS);
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setPipelineRuns(MOCK_PIPELINE_RUNS);
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setIsLoading(false);
         }
       } catch {
         if (isMounted) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setError('Failed to load sanity check pipeline data.');
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setIsLoading(false);
         }
       }

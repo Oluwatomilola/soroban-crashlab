@@ -34,7 +34,9 @@ export default function CampaignMilestoneTimeline({
   maxEventsDisplayed = 10,
 }: CampaignMilestoneTimelineProps) {
   const [events, setEvents] = useState<MilestoneEvent[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [seenRunIds, setSeenRunIds] = useState<string[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [knownFailureSignatures, setKnownFailureSignatures] = useState<
     string[]
   >([]);
@@ -44,15 +46,10 @@ export default function CampaignMilestoneTimeline({
   const sortedRuns = useMemo(() => sortRunsForTimeline(runs), [runs]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEvents([]);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSeenRunIds([]);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setKnownFailureSignatures([]);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsPaused(false);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLive(true);
   }, [campaignId]);
 
@@ -68,7 +65,6 @@ export default function CampaignMilestoneTimeline({
       campaignId,
       "campaign_start",
     );
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEvents([campaignStart]);
   }, [campaignId, dataState, events.length]);
 
