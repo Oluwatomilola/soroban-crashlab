@@ -19,7 +19,6 @@ import ReportModal from "./ReportModal";
 import { generateMarkdownReport } from "./report-utils";
 import CreateRunHeatmapPage55 from "./create-run-heatmap-page-55";
 import AddRunComparisonCharts from "./add-run-comparison-charts";
-import AddRunComparisonBuilder from "./add-run-comparison-builder";
 import AddTaggingAndLabelsUi from "./add-tagging-and-labels-ui";
 import AlertingSettingsPage54 from "./implement-alerting-settings-page-54";
 import AlertingSettingsPage from "./create-alerting-settings-page-page";
@@ -35,7 +34,6 @@ import AlertPresets from "./AlertPresets";
 import CreateReportingTemplatesPage60 from "./create-reporting-templates-page-60";
 import TimelineScrubber from "./implement-timeline-scrubber-component-component";
 import ColumnCustomization, { ColumnId } from "./add-column-customization";
-import IssueTriageBoard from "./add-issue-triage-board-ui";
 import CampaignMilestoneTimeline from "./campaign-milestone-timeline-55";
 import VirtualizedRunTable from "./implement-virtualized-run-table-component";
 import ReportingTemplatesManager from "./add-reporting-templates-manager";
@@ -364,6 +362,7 @@ function HomeContent() {
     if (reportRunId && !reportRun) {
       const run = runs.find(r => r.id === reportRunId);
       if (run) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setReportRun(run);
       } else if (dataState === "success") {
         // Clear param if run not found after data loaded
@@ -1031,9 +1030,7 @@ function HomeContent() {
             />
           </div>
 
-          <div className="mb-12 w-full">
-            <AddRunComparisonCharts runs={filteredRuns} />
-          </div>
+
 
           <div className="mb-12 w-full">
             <ResourceFeeInsightPanel runs={filteredRuns} />

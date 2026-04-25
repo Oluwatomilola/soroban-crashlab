@@ -42,6 +42,8 @@ interface ResourceFeeStats {
   };
 }
 
+
+
 const ResourceFeeInsightPanel: React.FC<ResourceFeeInsightPanelProps> = ({
   runs,
   className = '',
