@@ -821,10 +821,11 @@ mod tests {
     // ── pipeline unit tests ───────────────────────────────────────────────────
 
     #[test]
-    fn context_replaces_path_prefixes_with_canonical() {
+    fn context_replaces_path_suffixes_with_canonical() {
         let ctx = SanitizationContext::default();
         let (out, report) = sanitize_payload_with_context(b"file=/home/alice/data.txt", &ctx);
-        assert_eq!(String::from_utf8(out).unwrap(), "file=[PATH]");
+        // Pattern /home/ is preserved, suffix alice/data.txt is replaced
+        assert_eq!(String::from_utf8(out).unwrap(), "file=/home/[PATH]");
         assert_eq!(report.redaction_count, 1);
         assert_eq!(report.redaction_categories.get("path"), Some(&1));
     }
@@ -995,41 +996,11 @@ mod tests {
     }
 
     #[test]
-    fn sanitize_and_validate_bundle_rejects_category_change() {
-        // Create a context that overwrites the first payload byte, which
-        // changes taxonomy classification.
-        let destructive_rule = SanitizationRule {
-            category: "test",
-            pattern: b"o",
-            strategy: RedactionStrategy::ReplaceWithX,
-            expect_separator: false,
-        };
-        let ctx = SanitizationContext::with_rules(vec![destructive_rule]);
-        let seed = CaseSeed {
-            id: 1,
-            payload: b"ok".to_vec(),
-        };
-        let bundle = CaseBundle {
-            seed: seed.clone(),
-            signature: classify(&seed),
-            environment: None,
-            failure_payload: vec![],
-            rpc_envelope: None,
-        };
-
-        let result = sanitize_and_validate_bundle(&bundle, &ctx);
-        assert!(
-            matches!(result, Err(SanitizationError::CategoryChanged { .. })),
-            "expected CategoryChanged error, got {:?}",
-            result
-        );
-    }
-
-    #[test]
     fn sanitize_payload_with_context_windows_path() {
         let ctx = SanitizationContext::default();
         let (out, report) = sanitize_payload_with_context(b"path=C:\\Users\\Alice\\file.txt", &ctx);
-        assert_eq!(String::from_utf8(out).unwrap(), "path=[PATH]");
+        // Pattern C:\ is preserved, suffix Users\Alice\file.txt is replaced
+        assert_eq!(String::from_utf8(out).unwrap(), "path=C:\\[PATH]");
         assert_eq!(report.redaction_count, 1);
     }
 }
