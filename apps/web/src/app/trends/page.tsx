@@ -102,6 +102,7 @@ export default function CrashTrendPage() {
             trends that matter.
           </p>
         </div>
+      </div>
 
         {/* No data state */}
         {hasNoRuns ? (

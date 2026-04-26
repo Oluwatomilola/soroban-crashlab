@@ -19,7 +19,6 @@ import ReportModal from "./ReportModal";
 import { generateMarkdownReport } from "./report-utils";
 import CreateRunHeatmapPage55 from "./create-run-heatmap-page-55";
 import AddRunComparisonCharts from "./add-run-comparison-charts";
-import AddRunComparisonBuilder from "./add-run-comparison-builder";
 import AddTaggingAndLabelsUi from "./add-tagging-and-labels-ui";
 import AlertingSettingsPage54 from "./implement-alerting-settings-page-54";
 import AlertingSettingsPage from "./create-alerting-settings-page-page";
@@ -35,7 +34,6 @@ import AlertPresets from "./AlertPresets";
 import CreateReportingTemplatesPage60 from "./create-reporting-templates-page-60";
 import TimelineScrubber from "./implement-timeline-scrubber-component-component";
 import ColumnCustomization, { ColumnId } from "./add-column-customization";
-import IssueTriageBoard from "./add-issue-triage-board-ui";
 import CampaignMilestoneTimeline from "./campaign-milestone-timeline-55";
 import VirtualizedRunTable from "./implement-virtualized-run-table-component";
 import ReportingTemplatesManager from "./add-reporting-templates-manager";
@@ -64,7 +62,9 @@ import NotificationCenter from "./add-notification-center-ui";
 import BulkActionsForRuns, { BulkAction } from "./add-bulk-actions-for-runs";
 import AddDownloadableRunArtifactBundle from "./add-downloadable-run-artifact-bundle";
 import CampaignConfigForm from "./CampaignConfigForm";
+import ContributorSLATargets from "./ContributorSLATargets";
 import { CampaignConfig } from "./types";
+import ResourceFeeInsightPanel from "./implement-resource-fee-insight-panel-component";
 
 // Mock data for demonstration
 const MOCK_RUNS: FuzzingRun[] = Array.from({ length: 25 }, (_, i) => ({
@@ -364,6 +364,7 @@ function HomeContent() {
     if (reportRunId && !reportRun) {
       const run = runs.find(r => r.id === reportRunId);
       if (run) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setReportRun(run);
       } else if (dataState === "success") {
         // Clear param if run not found after data loaded
@@ -743,7 +744,11 @@ function HomeContent() {
             )}
           </div>
 
-          <div id="recent-runs" className="w-full mb-8 scroll-mt-8">
+    <div className="w-full mb-20 border-t border-zinc-100 dark:border-zinc-800 pt-20">
+      <ContributorSLATargets />
+    </div>
+
+    <div id="recent-runs" className="w-full mb-8 scroll-mt-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">Recent Fuzzing Runs</h2>
               <div className="flex items-center gap-3">
@@ -1036,6 +1041,12 @@ function HomeContent() {
               dataState={dataState}
               onRetry={() => setFetchAttempt((n) => n + 1)}
             />
+          </div>
+
+
+
+          <div className="mb-12 w-full">
+            <ResourceFeeInsightPanel runs={filteredRuns} />
           </div>
 
           <div className="mb-12 w-full">
