@@ -545,7 +545,6 @@ mod tests {
         assert!(report.is_consistent());
         
         let bundle = CaseBundle {
-            schema: CASE_BUNDLE_SCHEMA_VERSION,
             seed: report.seed,
             signature: report.results[0].signature.clone(),
             environment: None,
