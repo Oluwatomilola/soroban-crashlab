@@ -5,7 +5,7 @@
 
 use crate::bundle_persist::{BundlePersistError, CaseBundleDocument, CASE_BUNDLE_SCHEMA_VERSION};
 use crate::scenario_export::FailureScenario;
-use crate::{classify, CaseBundle, CaseSeed, CrashSignature};
+use crate::{classify, CaseBundle, CaseSeed};
 use std::collections::HashMap;
 
 // ── legacy key list (kept for backward-compatible low-level scanning) ────────
@@ -346,8 +346,9 @@ pub fn sanitize_payload_with_context(payload: &[u8], context: &SanitizationConte
                             out.truncate(out.len() - (-len_diff as usize));
                         } else {
                             let new_end = value_start + replacement.len();
-                            out.resize(out.len() + len_diff as usize, 0);
-                            out.copy_within(value_end..(out.len() - len_diff as usize), new_end);
+                            let old_len = out.len();
+                            out.resize(old_len + len_diff as usize, 0);
+                            out.copy_within(value_end..old_len, new_end);
                             out[value_start..new_end].copy_from_slice(replacement);
                         }
                         // Adjust index to account for length change
@@ -389,8 +390,9 @@ pub fn sanitize_payload_with_context(payload: &[u8], context: &SanitizationConte
                             out.truncate(out.len() - (-len_diff as usize));
                         } else {
                             let new_end = value_start + replacement.len();
-                            out.resize(out.len() + len_diff as usize, 0);
-                            out.copy_within(value_end..(out.len() - len_diff as usize), new_end);
+                            let old_len = out.len();
+                            out.resize(old_len + len_diff as usize, 0);
+                            out.copy_within(value_end..old_len, new_end);
                             out[value_start..new_end].copy_from_slice(replacement);
                         }
                         index = value_start + replacement.len();
