@@ -173,7 +173,7 @@ mod tests {
     fn make_fixture(group: Option<RegressionGroup>) -> RegressionFixture {
         let seed = CaseSeed { id: 1, payload: vec![0xA0] };
         let sig = CrashSignature {
-            category: "runtime-failure",
+            category: "runtime-failure".to_string(),
             digest: 0,
             signature_hash: 0x1111111111111111,
         };

@@ -71,7 +71,7 @@ mod tests {
 
     fn make_sig(cat: &'static str, hash: u64) -> CrashSignature {
         CrashSignature {
-            category: cat,
+            category: cat.to_string(),
             digest: 0,
             signature_hash: hash,
         }

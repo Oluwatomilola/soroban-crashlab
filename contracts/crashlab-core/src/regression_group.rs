@@ -57,9 +57,11 @@ impl RegressionGroup {
             "budget" => FailureClass::Budget,
             "state" => FailureClass::State,
             "xdr" => FailureClass::Xdr,
+            "invalid-enum-tag" => FailureClass::InvalidEnumTag,
             "empty-input" => FailureClass::EmptyInput,
             "oversized-input" => FailureClass::OversizedInput,
             "unknown" => FailureClass::Unknown,
+            "timeout" => FailureClass::Timeout,
             _ => return None,
         };
 

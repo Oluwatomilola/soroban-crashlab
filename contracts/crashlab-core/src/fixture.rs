@@ -76,7 +76,7 @@ mod tests {
     fn fixture_new_from_seed_and_signature() {
         let seed = CaseSeed { id: 42, payload: vec![1, 2, 3] };
         let sig = CrashSignature {
-            category: "runtime-failure",
+            category: "runtime-failure".to_string(),
             digest: 0xABCD,
             signature_hash: 0x1234567890ABCDEF,
         };
@@ -95,7 +95,7 @@ mod tests {
     fn fixture_new_without_group() {
         let seed = CaseSeed { id: 1, payload: vec![255] };
         let sig = CrashSignature {
-            category: "empty-input",
+            category: "empty-input".to_string(),
             digest: 0xFFFF,
             signature_hash: 0x5555555555555555,
         };
@@ -127,7 +127,7 @@ mod tests {
     fn fixture_to_seed_round_trip() {
         let original_seed = CaseSeed { id: 77, payload: vec![4, 5, 6] };
         let sig = CrashSignature {
-            category: "state",
+            category: "state".to_string(),
             digest: 0x1111,
             signature_hash: 0xCCCCCCCCCCCCCCCC,
         };
@@ -144,7 +144,7 @@ mod tests {
         let seed1 = CaseSeed { id: 1, payload: vec![1] };
         let seed2 = CaseSeed { id: 1, payload: vec![1] };
         let sig = CrashSignature {
-            category: "runtime-failure",
+            category: "runtime-failure".to_string(),
             digest: 0x1234,
             signature_hash: 0x1234567890ABCDEF,
         };
@@ -160,7 +160,7 @@ mod tests {
     fn fixture_with_group_or_unknown_when_present() {
         let seed = CaseSeed { id: 1, payload: vec![1] };
         let sig = CrashSignature {
-            category: "auth",
+            category: "auth".to_string(),
             digest: 0x0,
             signature_hash: 0x9999999999999999,
         };
@@ -175,7 +175,7 @@ mod tests {
     fn fixture_with_group_or_unknown_when_absent() {
         let seed = CaseSeed { id: 2, payload: vec![2] };
         let sig = CrashSignature {
-            category: "oversized-input",
+            category: "oversized-input".to_string(),
             digest: 0x0,
             signature_hash: 0x7777777777777777,
         };
@@ -190,7 +190,7 @@ mod tests {
     fn fixture_cloneable() {
         let seed = CaseSeed { id: 5, payload: vec![5] };
         let sig = CrashSignature {
-            category: "runtime-failure",
+            category: "runtime-failure".to_string(),
             digest: 0x0,
             signature_hash: 0x1111111111111111,
         };
