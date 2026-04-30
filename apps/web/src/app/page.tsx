@@ -34,7 +34,7 @@ import MaintainerToggle from "./MaintainerToggle";
 import { useMaintainerMode } from "./useMaintainerMode";
 import AlertPresets from "./AlertPresets";
 import CreateReportingTemplatesPage60 from "./create-reporting-templates-page-60";
-import TimelineScrubber from "./implement-timeline-scrubber-component-component";
+import TimelineScrubber from "./TimelineScrubber";
 import ColumnCustomization, { ColumnId } from "./add-column-customization";
 import CampaignMilestoneTimeline from "./campaign-milestone-timeline-55";
 import VirtualizedRunTable from "./implement-virtualized-run-table-component";
